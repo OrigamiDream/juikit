@@ -38,8 +38,8 @@ public class JuikitTest {
                         }
 
                         if(j == 5) {
-//                            jk.removeData(3);
-//                            jk.data(2, false);
+                            jk.removeData(3);
+                            jk.data(2, false);
                         } else {
                             jk.data(3, j + 1);
                         }
