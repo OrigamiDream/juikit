@@ -27,6 +27,8 @@ public class Juikit {
     private Map<Object, Object> storage = new ConcurrentHashMap<>();
 
     private AtomicBoolean antialiasing = new AtomicBoolean(false);
+    
+    private boolean size = false;
 
     private Juikit(JuikitFrame frame) {
         this.frame = frame;
@@ -72,6 +74,15 @@ public class Juikit {
     public <T> T data(Object key, Class<T> type) {
         return data(key);
     }
+    
+    public Juikit centerAlign() {
+        if(!size) {
+            throw new IllegalStateException("Size have to be defined first before invoke center align");
+        }
+        Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
+        frame.setLocation(dimension.width / 2 - width() / 2, dimension.height / 2 - height() / 2);
+        return this;
+    }
 
     public boolean antialiasing() {
         return antialiasing.get();
@@ -88,6 +99,7 @@ public class Juikit {
     }
 
     public Juikit size(int width, int height) {
+        size = true;
         frame.setSize(new Dimension(width, height));
         return this;
     }
@@ -119,6 +131,11 @@ public class Juikit {
         REPAINT_INTEVAL.set(milliseconds);
         new Thread(() -> {
             while(REPAINT.get()) {
+                try {
+                    Thread.sleep(REPAINT_INTEVAL.get());
+                } catch(InterruptedException e) {
+                    e.printStackTrace();
+                }
                 repaint();
             }
         }).start();
