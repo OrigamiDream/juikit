@@ -1,12 +1,12 @@
 package avis.juikit;
 
 import avis.juikit.internal.*;
+import avis.juikit.internal.Button;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -73,6 +73,11 @@ public class Juikit {
 
     public <T> T data(Object key, Class<T> type) {
         return data(key);
+    }
+
+    public Juikit title(String title) {
+        frame.setTitle(title);
+        return this;
     }
     
     public Juikit centerAlign() {
@@ -182,6 +187,21 @@ public class Juikit {
         panel.addMouseListener(mouseListener);
         panel.addMouseMotionListener(mouseListener);
         panel.addMouseWheelListener(mouseListener);
+        return this;
+    }
+
+    public Juikit button(Button.Builder builder) {
+        panel.addButton(builder);
+        return this;
+    }
+
+    public Juikit removeButton(Object id) {
+        panel.removeButton(id);
+        return this;
+    }
+
+    public Juikit clearButtons() {
+        panel.clearButtons();
         return this;
     }
 

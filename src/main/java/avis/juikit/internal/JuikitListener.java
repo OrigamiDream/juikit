@@ -6,136 +6,138 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
+import java.util.ArrayList;
+import java.util.List;
 
 public class JuikitListener {
 
     private final Juikit juikit;
 
-    private JuikitConsumer<KeyEvent> keyTyped = JuikitConsumer.empty();
-    private JuikitConsumer<KeyEvent> keyPressed = JuikitConsumer.empty();
-    private JuikitConsumer<KeyEvent> keyReleased = JuikitConsumer.empty();
-    private JuikitConsumer<MouseEvent> mouseClicked = JuikitConsumer.empty();
-    private JuikitConsumer<MouseEvent> mousePressed = JuikitConsumer.empty();
-    private JuikitConsumer<MouseEvent> mouseReleased = JuikitConsumer.empty();
-    private JuikitConsumer<MouseEvent> mouseEntered = JuikitConsumer.empty();
-    private JuikitConsumer<MouseEvent> mouseExited = JuikitConsumer.empty();
-    private JuikitConsumer<MouseEvent> mouseDragged = JuikitConsumer.empty();
-    private JuikitConsumer<MouseEvent> mouseMoved = JuikitConsumer.empty();
-    private JuikitConsumer<MouseEvent> mouseWheelMoved = JuikitConsumer.empty();
+    private List<JuikitConsumer<KeyEvent>> keyTyped = new ArrayList<>();
+    private List<JuikitConsumer<KeyEvent>> keyPressed = new ArrayList<>();
+    private List<JuikitConsumer<KeyEvent>> keyReleased = new ArrayList<>();
+    private List<JuikitConsumer<MouseEvent>> mouseClicked = new ArrayList<>();
+    private List<JuikitConsumer<MouseEvent>> mousePressed = new ArrayList<>();
+    private List<JuikitConsumer<MouseEvent>> mouseReleased = new ArrayList<>();
+    private List<JuikitConsumer<MouseEvent>> mouseEntered = new ArrayList<>();
+    private List<JuikitConsumer<MouseEvent>> mouseExited = new ArrayList<>();
+    private List<JuikitConsumer<MouseEvent>> mouseDragged = new ArrayList<>();
+    private List<JuikitConsumer<MouseEvent>> mouseMoved = new ArrayList<>();
+    private List<JuikitConsumer<MouseEvent>> mouseWheelMoved = new ArrayList<>();
 
     public JuikitListener(Juikit juikit) {
         this.juikit = juikit;
         this.juikit.keyListener(new KeyListener() {
             @Override
             public void keyTyped(KeyEvent e) {
-                keyTyped.acceptOptional(juikit, e);
+                keyTyped.forEach(k -> k.acceptOptional(juikit, e));
             }
 
             @Override
             public void keyPressed(KeyEvent e) {
-                keyPressed.acceptOptional(juikit, e);
+                keyPressed.forEach(k -> k.acceptOptional(juikit, e));
             }
 
             @Override
             public void keyReleased(KeyEvent e) {
-                keyReleased.acceptOptional(juikit, e);
+                keyReleased.forEach(k -> k.acceptOptional(juikit, e));
             }
         });
         this.juikit.mouseListener(new MouseListenerDelegate() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                mouseClicked.acceptOptional(juikit, e);
+                mouseClicked.forEach(k -> k.acceptOptional(juikit, e));
             }
 
             @Override
             public void mousePressed(MouseEvent e) {
-                mousePressed.acceptOptional(juikit, e);
+                mousePressed.forEach(k -> k.acceptOptional(juikit, e));
             }
 
             @Override
             public void mouseReleased(MouseEvent e) {
-                mouseReleased.acceptOptional(juikit, e);
+                mouseReleased.forEach(k -> k.acceptOptional(juikit, e));
             }
 
             @Override
             public void mouseEntered(MouseEvent e) {
-                mouseEntered.acceptOptional(juikit, e);
+                mouseEntered.forEach(k -> k.acceptOptional(juikit, e));
             }
 
             @Override
             public void mouseExited(MouseEvent e) {
-                mouseExited.acceptOptional(juikit, e);
+                mouseExited.forEach(k -> k.acceptOptional(juikit, e));
             }
 
             @Override
             public void mouseDragged(MouseEvent e) {
-                mouseDragged.acceptOptional(juikit, e);
+                mouseDragged.forEach(k -> k.acceptOptional(juikit, e));
             }
 
             @Override
             public void mouseMoved(MouseEvent e) {
-                mouseMoved.acceptOptional(juikit, e);
+                mouseMoved.forEach(k -> k.acceptOptional(juikit, e));
             }
 
             @Override
             public void mouseWheelMoved(MouseWheelEvent e) {
-                mouseWheelMoved.acceptOptional(juikit, e);
+                mouseWheelMoved.forEach(k -> k.acceptOptional(juikit, e));
             }
         });
     }
 
     public Juikit mouseClicked(JuikitConsumer<MouseEvent> mouseClicked) {
-        this.mouseClicked = mouseClicked;
+        this.mouseClicked.add(mouseClicked);
         return juikit;
     }
 
     public Juikit mousePressed(JuikitConsumer<MouseEvent> mousePressed) {
-        this.mousePressed = mousePressed;
+        this.mousePressed.add(mousePressed);
         return juikit;
     }
 
     public Juikit mouseReleased(JuikitConsumer<MouseEvent> mouseReleased) {
-        this.mouseReleased = mouseReleased;
+        this.mouseReleased.add(mouseReleased);
         return juikit;
     }
 
     public Juikit mouseEntered(JuikitConsumer<MouseEvent> mouseEntered) {
-        this.mouseEntered = mouseEntered;
+        this.mouseEntered.add(mouseEntered);
         return juikit;
     }
 
     public Juikit mouseExited(JuikitConsumer<MouseEvent> mouseExited) {
-        this.mouseExited = mouseExited;
+        this.mouseExited.add(mouseExited);
         return juikit;
     }
 
     public Juikit mouseDragged(JuikitConsumer<MouseEvent> mouseDragged) {
-        this.mouseDragged = mouseDragged;
+        this.mouseDragged.add(mouseDragged);
         return juikit;
     }
 
     public Juikit mouseMoved(JuikitConsumer<MouseEvent> mouseMoved) {
-        this.mouseMoved = mouseMoved;
+        this.mouseMoved.add(mouseMoved);
         return juikit;
     }
 
     public Juikit mouseWheelMoved(JuikitConsumer<MouseEvent> mouseWheelMoved) {
-        this.mouseWheelMoved = mouseWheelMoved;
+        this.mouseWheelMoved.add(mouseWheelMoved);
         return juikit;
     }
 
     public Juikit keyTyped(JuikitConsumer<KeyEvent> keyTyped) {
-        this.keyTyped = keyTyped;
+        this.keyTyped.add(keyTyped);
         return juikit;
     }
 
     public Juikit keyPressed(JuikitConsumer<KeyEvent> keyPressed) {
-        this.keyPressed = keyPressed;
+        this.keyPressed.add(keyPressed);
         return juikit;
     }
 
     public Juikit keyReleased(JuikitConsumer<KeyEvent> keyReleased) {
-        this.keyReleased = keyReleased;
+        this.keyReleased.add(keyReleased);
         return juikit;
     }
 
