@@ -44,6 +44,7 @@ public class JuikitButtonTest {
 
                 // Center-aligned button
                 .button(Button.builder()
+                                .id("CENTER_ALIGNED_BUTTON")
                                 .sizeDynamic((juikit, size) -> {
                                     int width = juikit.width();
                                     int height = juikit.height();
@@ -62,7 +63,7 @@ public class JuikitButtonTest {
                                 })
                                 .processReleased((juikit, graphics) -> {
                                     System.out.println("Released.");
-                                    juikit.clearButtons();
+                                    juikit.removeButton("CENTER_ALIGNED_BUTTON");
                                 })
                                 .processWhile((juikit, graphics) -> {
                                     System.out.println("While");

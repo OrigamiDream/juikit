@@ -89,6 +89,10 @@ public class Juikit {
         return this;
     }
 
+    public JuikitPanel panel() {
+        return panel;
+    }
+
     public boolean antialiasing() {
         return antialiasing.get();
     }
