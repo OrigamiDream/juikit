@@ -4,6 +4,7 @@ import avis.juikit.Juikit;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -57,6 +58,7 @@ public class JuikitPanel extends JPanel {
             });
         }
         buttons.add(button.button);
+        buttons.sort(Comparator.comparingInt(a -> a.priority));
     }
 
     public void removeButton(Object id) {

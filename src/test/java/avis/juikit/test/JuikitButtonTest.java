@@ -37,6 +37,7 @@ public class JuikitButtonTest {
 
                 // Fixed button
                 .button(Button.builder()
+                                .priority(40)
                                 .sizeFixed(25, 25, 25, 25)
                                 .background(Color.RED)
                                 .hover(Color.BLUE)
@@ -45,6 +46,7 @@ public class JuikitButtonTest {
                 // Center-aligned button
                 .button(Button.builder()
                                 .id("CENTER_ALIGNED_BUTTON")
+                                .priority(50)
                                 .sizeDynamic((juikit, size) -> {
                                     int width = juikit.width();
                                     int height = juikit.height();
@@ -71,6 +73,7 @@ public class JuikitButtonTest {
 
                 // Draggable button
                 .button(Button.builder()
+                                .priority(1)
                                 .sizeDynamic((juikit, size) -> {
                                     size.width = 30;
                                     size.height = 30;
