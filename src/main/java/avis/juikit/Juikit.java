@@ -3,6 +3,7 @@ package avis.juikit;
 import avis.juikit.internal.*;
 import avis.juikit.internal.Button;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -15,7 +16,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 public class Juikit {
 
-    private final JuikitFrame frame;
+    private final JFrame frame;
     private final JuikitPanel panel;
     private final JuikitListener listener;
 
@@ -30,7 +31,7 @@ public class Juikit {
     
     private boolean size = false;
 
-    private Juikit(JuikitFrame frame) {
+    private Juikit(JFrame frame) {
         this.frame = frame;
         this.panel = new JuikitPanel(this);
         this.frame.setContentPane(panel);
@@ -38,7 +39,7 @@ public class Juikit {
     }
 
     public static Juikit createFrame() {
-        return new Juikit(new JuikitFrame());
+        return new Juikit(new JFrame());
     }
 
     public Juikit data(Object key, Object value) {
@@ -87,6 +88,10 @@ public class Juikit {
         Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
         frame.setLocation(dimension.width / 2 - width() / 2, dimension.height / 2 - height() / 2);
         return this;
+    }
+
+    public JFrame frame() {
+        return frame;
     }
 
     public JuikitPanel panel() {
