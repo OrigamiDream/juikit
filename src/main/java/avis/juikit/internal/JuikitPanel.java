@@ -64,7 +64,7 @@ public class JuikitPanel extends JPanel {
     }
 
     public void removeButton(Object id) {
-        buttons.removeIf(button -> button.id.equals(id));
+        buttons.removeIf(button -> button.id != null && button.id.equals(id));
     }
 
     public void clearButtons() {
@@ -90,7 +90,7 @@ public class JuikitPanel extends JPanel {
     }
 
     public void removeTextField(Object id) {
-        Predicate<TextField> predicate = textField -> textField.id.equals(id);
+        Predicate<TextField> predicate = textField -> textField.id != null && textField.id.equals(id);
         textFields.stream().filter(predicate).map(TextField::getField).forEach(this::remove);
         textFields.removeIf(predicate);
     }
