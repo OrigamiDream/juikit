@@ -107,13 +107,6 @@ public class Button {
         return size.x <= x && size.y <= y && (size.width + size.x) >= x && (size.height + size.y) >= y;
     }
 
-    public static class Size {
-        public int x;
-        public int y;
-        public int width;
-        public int height;
-    }
-
     public static class Builder {
 
         final Button button = new Button();

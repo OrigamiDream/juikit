@@ -7,6 +7,7 @@ import java.awt.*;
 import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.function.Predicate;
 
 public class JuikitPanel extends JPanel {
 
@@ -14,6 +15,7 @@ public class JuikitPanel extends JPanel {
     private Image backgroundImage;
 
     private final List<Button> buttons = new CopyOnWriteArrayList<>();
+    private final List<TextField> textFields = new CopyOnWriteArrayList<>();
 
     public JuikitPanel(Juikit juikit) {
         this.juikit = juikit;
@@ -62,11 +64,40 @@ public class JuikitPanel extends JPanel {
     }
 
     public void removeButton(Object id) {
-        buttons.removeIf(button -> button.id == id);
+        buttons.removeIf(button -> button.id.equals(id));
     }
 
     public void clearButtons() {
         buttons.clear();
+    }
+
+    public void addTextField(TextField.Builder builder) {
+        JTextField field = new JTextField();
+        TextField textField = builder.field;
+        if(textField.initText != null) {
+            field.setText(textField.initText);
+        }
+        Size size = textField.chooseSize(juikit);
+        field.setBounds(size.x, size.y, size.width, size.height);
+        field.setSize(size.width, size.height);
+        field.setVisible(true);
+
+        textField.field = field;
+        textField.prev = size.copy();
+
+        textFields.add(textField);
+        add(field);
+    }
+
+    public void removeTextField(Object id) {
+        Predicate<TextField> predicate = textField -> textField.id.equals(id);
+        textFields.stream().filter(predicate).map(TextField::getField).forEach(this::remove);
+        textFields.removeIf(predicate);
+    }
+
+    public void clearTextFields() {
+        textFields.stream().map(TextField::getField).forEach(this::remove);
+        textFields.clear();
     }
 
     @Override
@@ -103,6 +134,10 @@ public class JuikitPanel extends JPanel {
                 button.deferredReleased = false;
                 button.activateAfter(juikit, g);
             }
+        }
+
+        for(TextField textField : textFields) {
+            textField.renderDefault(juikit, g, this);
         }
     }
 }

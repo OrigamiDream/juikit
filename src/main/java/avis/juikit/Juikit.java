@@ -2,12 +2,15 @@ package avis.juikit;
 
 import avis.juikit.internal.*;
 import avis.juikit.internal.Button;
+import avis.juikit.internal.TextField;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -19,6 +22,7 @@ public class Juikit {
     private final JFrame frame;
     private final JuikitPanel panel;
     private final JuikitListener listener;
+    private final List<JTextField> textFields = new ArrayList<>();
 
     private AtomicReference<Repaint> repaint = new AtomicReference<>(null);
 
@@ -36,6 +40,7 @@ public class Juikit {
         this.panel = new JuikitPanel(this);
         this.frame.setContentPane(panel);
         this.listener = new JuikitListener(this);
+        this.panel.setLayout(null);
     }
 
     public static Juikit createFrame() {
@@ -196,6 +201,36 @@ public class Juikit {
         panel.addMouseListener(mouseListener);
         panel.addMouseMotionListener(mouseListener);
         panel.addMouseWheelListener(mouseListener);
+        return this;
+    }
+
+    public Juikit textField(String initText, int x, int y, int width, int height) {
+        JTextField field = new JTextField();
+        if(initText != null) {
+            field.setText(initText);
+        }
+        field.setBounds(x, y, width, height);
+        field.setSize(width, height);
+        field.setVisible(true);
+
+        textFields.add(field);
+        panel().add(field);
+
+        return this;
+    }
+
+    public Juikit textField(TextField.Builder builder) {
+        panel.addTextField(builder);
+        return this;
+    }
+
+    public Juikit removeTextField(Object id) {
+        panel.removeTextField(id);
+        return this;
+    }
+
+    public Juikit clearTextField() {
+        panel.clearTextFields();
         return this;
     }
 
