@@ -56,7 +56,6 @@ public class TextField {
         if(!size.equals(prev)) {
             field.setBounds(size.x, size.y, size.width, size.height);
             field.setSize(size.width, size.height);
-            System.out.println("Position");
             prev = size.copy();
         }
         if(updater != null) {
