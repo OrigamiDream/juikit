@@ -20,6 +20,8 @@ import java.util.concurrent.atomic.AtomicReference;
 
 public class Juikit {
 
+    private static final String OPERATING_SYSTEM = System.getProperty("os.name").toLowerCase();
+
     private final JFrame frame;
     private final JuikitPanel panel;
     private final JuikitListener listener;
@@ -44,12 +46,33 @@ public class Juikit {
         this.panel.setLayout(null);
     }
 
+    public boolean macOS() {
+        return OPERATING_SYSTEM.contains("mac");
+    }
+
+    public boolean unix() {
+        return OPERATING_SYSTEM.contains("nix") || OPERATING_SYSTEM.contains("nux") || OPERATING_SYSTEM.contains("aix");
+    }
+
+    public boolean solaris() {
+        return OPERATING_SYSTEM.contains("sunos");
+    }
+
+    public boolean windows() {
+        return OPERATING_SYSTEM.contains("win");
+    }
+
     public static Juikit createFrame() {
         return new Juikit(new JFrame());
     }
 
     public Juikit dockIcon(Image image) {
+        if(!macOS()) {
+            return this;
+        }
         try {
+            Class.forName("com.apple.eawt.Application");
+
             com.apple.eawt.Application.getApplication().setDockIconImage(image);
         } catch (Exception ignored) {
         }
