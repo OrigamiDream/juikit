@@ -9,6 +9,7 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -45,6 +46,43 @@ public class Juikit {
 
     public static Juikit createFrame() {
         return new Juikit(new JFrame());
+    }
+
+    public Juikit dockIcon(Image image) {
+        try {
+            com.apple.eawt.Application.getApplication().setDockIconImage(image);
+        } catch (Exception ignored) {
+        }
+        return this;
+    }
+
+    public Juikit dockIcon(String path) {
+        return dockIcon(new ImageIcon(path).getImage());
+    }
+
+    public Juikit dockIcon(URL url) {
+        return dockIcon(new ImageIcon(url).getImage());
+    }
+
+    public Juikit dockIcon(byte[] imageData) {
+        return dockIcon(new ImageIcon(imageData).getImage());
+    }
+
+    public Juikit icon(Image image) {
+        frame().setIconImage(image);
+        return this;
+    }
+
+    public Juikit icon(String path) {
+        return icon(new ImageIcon(path).getImage());
+    }
+
+    public Juikit icon(URL url) {
+        return icon(new ImageIcon(url).getImage());
+    }
+
+    public Juikit icon(byte[] imageData) {
+        return icon(new ImageIcon(imageData).getImage());
     }
 
     public Juikit data(Object key, Object value) {
