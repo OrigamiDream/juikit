@@ -13,6 +13,10 @@ public class JuikitOverlayButtonTest {
 
     private static final String[] TEXTS = { "Foo", "Bar", "Forum", "Contact", "Play now" };
 
+    private static final byte PREV_MOUSE_X = 0;
+    private static final byte PREV_MOUSE_Y = 1;
+    private static final byte MOVING = 2;
+
     public static void main(String args[]) {
         Juikit juikit = Juikit.createFrame()
                 .title("Juikit Overlay Button Test")
@@ -21,7 +25,50 @@ public class JuikitOverlayButtonTest {
                 .background(Color.WHITE)
                 .closeOperation(WindowConstants.EXIT_ON_CLOSE)
                 .repaintInterval(10)
-                .antialiasing(true);
+                .antialiasing(true)
+                .alwaysOnTop(true)
+                .undecorated(true)
+
+                .data(PREV_MOUSE_X, 0)
+                .data(PREV_MOUSE_Y, 0)
+                .data(MOVING, false)
+
+                .mouseMoved((jk, mouseEvent) -> {
+                    int x = mouseEvent.getXOnScreen();
+                    int y = mouseEvent.getYOnScreen();
+                    if(jk.data(MOVING)) {
+                        int prevX = jk.data(PREV_MOUSE_X);
+                        int prevY = jk.data(PREV_MOUSE_Y);
+
+                        int diffX = x - prevX;
+                        int diffY = y - prevY;
+                        jk.frame().setLocation(jk.frame().getX() + diffX, jk.frame().getY() + diffY);
+                    }
+
+                    jk.data(PREV_MOUSE_X, x);
+                    jk.data(PREV_MOUSE_Y, y);
+                })
+                .mouseDragged((jk, mouseEvent) -> {
+                    int x = mouseEvent.getXOnScreen();
+                    int y = mouseEvent.getYOnScreen();
+                    if(jk.data(MOVING)) {
+                        int prevX = jk.data(PREV_MOUSE_X);
+                        int prevY = jk.data(PREV_MOUSE_Y);
+
+                        int diffX = x - prevX;
+                        int diffY = y - prevY;
+                        jk.frame().setLocation(jk.frame().getX() + diffX, jk.frame().getY() + diffY);
+                    }
+
+                    jk.data(PREV_MOUSE_X, x);
+                    jk.data(PREV_MOUSE_Y, y);
+                })
+                .mousePressed((jk, mouseEvent) -> {
+                    jk.data(MOVING, true);
+                })
+                .mouseReleased((jk, mouseEvent) -> {
+                    jk.data(MOVING, false);
+                });
 
         for(int i = 0; i < 5; i++) {
             int x = 0;

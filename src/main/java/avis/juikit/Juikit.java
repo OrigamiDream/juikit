@@ -85,6 +85,24 @@ public class Juikit {
         frame.setTitle(title);
         return this;
     }
+
+    public Juikit undecorated(boolean undecorated) {
+        frame.setUndecorated(undecorated);
+        return this;
+    }
+
+    public boolean undecorated() {
+        return frame.isUndecorated();
+    }
+
+    public Juikit alwaysOnTop(boolean alwaysOnTop) {
+        frame.setAlwaysOnTop(alwaysOnTop);
+        return this;
+    }
+
+    public boolean alwaysOnTop() {
+        return frame.isAlwaysOnTop();
+    }
     
     public Juikit centerAlign() {
         if(!size) {
