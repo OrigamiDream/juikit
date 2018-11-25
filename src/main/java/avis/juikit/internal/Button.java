@@ -44,6 +44,8 @@ public class Button {
     private Consumer2d<Juikit, Graphics> runnablePressed;
     private Consumer2d<Juikit, Graphics> runnableWhile;
 
+    boolean highPriorityOnly = true;
+
     void renderDefault(Juikit juikit, Graphics graphics, ImageObserver observer) {
         drawInternal(juikit, graphics, observer, image, color, painter);
     }
@@ -196,6 +198,11 @@ public class Button {
 
         public Builder processWhile(Consumer2d<Juikit, Graphics> runnable) {
             button.runnableWhile = runnable;
+            return this;
+        }
+
+        public Builder highPriorityOnly(boolean highPriorityOnly) {
+            button.highPriorityOnly = highPriorityOnly;
             return this;
         }
     }

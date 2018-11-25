@@ -31,7 +31,8 @@ public class JuikitPanel extends JPanel {
                 int x = mouseEvent.getX();
                 int y = mouseEvent.getY();
 
-                for(Button btn : buttons) {
+                for(int i = buttons.size() - 1; i >= 0; i--) {
+                    Button btn = buttons.get(i);
                     if(btn.isHoverable() && !btn.pressed) {
                         btn.hovered = btn.checkHover(jk, x, y);
                         if(btn.hovered) {
@@ -41,16 +42,22 @@ public class JuikitPanel extends JPanel {
                 }
             });
             juikit.mousePressed((jk, mouseEvent) -> {
-                for(Button btn : buttons) {
+                for(int i = buttons.size() - 1; i >= 0; i--) {
+                    Button btn = buttons.get(i);
                     if(btn.checkHover(jk, mouseEvent.getX(), mouseEvent.getY())) {
                         btn.deferredPressed = true;
                         btn.pressed = true;
                         jk.repaint();
+
+                        if(btn.highPriorityOnly) {
+                            break;
+                        }
                     }
                 }
             });
             juikit.mouseReleased((jk, mouseEvent) -> {
-                for(Button btn : buttons) {
+                for(int i = buttons.size() - 1; i >= 0; i--) {
+                    Button btn = buttons.get(i);
                     if(btn.pressed) {
                         btn.deferredReleased = true;
                     }
