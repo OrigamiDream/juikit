@@ -86,6 +86,11 @@ public class Juikit {
         return this;
     }
 
+    public Juikit prefer(Consumer2d<Juikit, JFrame> consumer) {
+        consumer.accept(this, frame);
+        return this;
+    }
+
     public Juikit undecorated(boolean undecorated) {
         frame.setUndecorated(undecorated);
         return this;
