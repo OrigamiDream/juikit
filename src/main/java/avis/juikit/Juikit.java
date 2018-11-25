@@ -9,6 +9,7 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
+import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -71,9 +72,15 @@ public class Juikit {
             return this;
         }
         try {
-            Class.forName("com.apple.eawt.Application");
+            Class<?> clazz = Class.forName("com.apple.eawt.Application");
+            Method getApplication = clazz.getDeclaredMethod("getApplication");
+            getApplication.setAccessible(true);
+            Object application = getApplication.invoke(null);
 
-            com.apple.eawt.Application.getApplication().setDockIconImage(image);
+            Class<?> applicationType = application.getClass();
+            Method setDockIconImage = applicationType.getDeclaredMethod("setDockIconImage", Image.class);
+            setDockIconImage.setAccessible(true);
+            setDockIconImage.invoke(application, image);
         } catch (Exception ignored) {
         }
         return this;
