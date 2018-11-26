@@ -14,6 +14,8 @@ public class JuikitLayoutTest {
     private static final byte DIRECTION = 3;
 
     private static final int FADING_SPEED = 8;
+    private static final double FADING_RATIO = 0.001;
+    private static final double FADING_EXPAND_RATIO = FADING_RATIO * 50;
 
     public static void main(String args[]) {
         Juikit.createFrame()
@@ -70,11 +72,11 @@ public class JuikitLayoutTest {
                                 int diffX = pX - cX;
                                 int diffY = pY - cY;
 
-                                diffX *= (double) layer0 * 0.01;
-                                diffY *= (double) layer0 * 0.01;
+                                diffX *= (double) layer0 * FADING_RATIO;
+                                diffY *= (double) layer0 * FADING_RATIO;
 
                                 graphics.setColor(new Color(64, 64, 64, 100 - layer0));
-                                graphics.fillRect(pX + diffX, pY + diffY, 25, 25);
+                                graphics.fillRect(pX + diffX, pY + diffY, (int) (25d + (double) layer0 * FADING_EXPAND_RATIO), (int) (25d + (double) layer0 * FADING_EXPAND_RATIO));
                             }
                         }
                     }
@@ -90,11 +92,11 @@ public class JuikitLayoutTest {
                                 int diffX = pX - cX;
                                 int diffY = pY - cY;
 
-                                diffX *= (double) layer1 * 0.01;
-                                diffY *= (double) layer1 * 0.01;
+                                diffX *= (double) layer1 * FADING_RATIO;
+                                diffY *= (double) layer1 * FADING_RATIO;
 
                                 graphics.setColor(new Color(64, 64, 64, 100 - layer1));
-                                graphics.fillRect(pX + diffX, pY + diffY, 40, 40);
+                                graphics.fillRect(pX + diffX, pY + diffY, (int) (40d + (double) layer1 * FADING_EXPAND_RATIO), (int) (40d + (double) layer1 * FADING_EXPAND_RATIO));
                             }
                         }
                     }
