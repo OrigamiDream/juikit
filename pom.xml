@@ -6,7 +6,7 @@
 
     <groupId>avis.juikit</groupId>
     <artifactId>juikit</artifactId>
-    <version>1.9-SNAPSHOT</version>
+    <version>1.10-SNAPSHOT</version>
     <build>
         <plugins>
             <plugin>

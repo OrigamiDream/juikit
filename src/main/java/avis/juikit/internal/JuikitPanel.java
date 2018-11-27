@@ -112,7 +112,7 @@ public class JuikitPanel extends JPanel {
         if(backgroundImage != null) {
             g.drawImage(backgroundImage, 0, 0, this);
         }
-        
+
         if(juikit.beforePainter() != null) {
             juikit.beforePainter().repaint(juikit, g);
         }
