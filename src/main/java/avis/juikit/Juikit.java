@@ -28,7 +28,9 @@ public class Juikit {
     private final JuikitListener listener;
     private final List<JTextField> textFields = new ArrayList<>();
 
+    private AtomicReference<Repaint> beforePainter = new AtomicReference<>(null);
     private AtomicReference<Repaint> repaint = new AtomicReference<>(null);
+    private AtomicReference<Repaint> afterPainter = new AtomicReference<>(null);
 
     private AtomicBoolean REPAINT = new AtomicBoolean(false);
     private AtomicLong REPAINT_INTEVAL = new AtomicLong();
@@ -220,6 +222,24 @@ public class Juikit {
 
     public int height() {
         return frame.getSize().height;
+    }
+
+    public Repaint beforePainter() {
+        return beforePainter.get();
+    }
+
+    public Juikit beforePainter(Repaint repaint) {
+        this.beforePainter.set(repaint);
+        return this;
+    }
+
+    public Repaint afterPainter() {
+        return afterPainter.get();
+    }
+
+    public Juikit afterPainter(Repaint repaint) {
+        this.afterPainter.set(repaint);
+        return this;
     }
 
     public Repaint painter() {

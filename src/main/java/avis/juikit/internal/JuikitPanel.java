@@ -112,6 +112,10 @@ public class JuikitPanel extends JPanel {
         if(backgroundImage != null) {
             g.drawImage(backgroundImage, 0, 0, this);
         }
+        
+        if(juikit.beforePainter() != null) {
+            juikit.beforePainter().repaint(juikit, g);
+        }
 
         if(juikit.antialiasing()) {
             RenderingHints hints = new RenderingHints(RenderingHints.KEY_ANTIALIASING,
@@ -145,6 +149,10 @@ public class JuikitPanel extends JPanel {
 
         for(TextField textField : textFields) {
             textField.renderDefault(juikit, g, this);
+        }
+
+        if(juikit.afterPainter() != null) {
+            juikit.afterPainter().repaint(juikit, g);
         }
     }
 }
