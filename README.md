@@ -1,4 +1,4 @@
-# Juikit
+# JUIKit
 
 Java builder style UI library
 
