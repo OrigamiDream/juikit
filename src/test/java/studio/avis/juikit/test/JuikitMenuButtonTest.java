@@ -1,7 +1,7 @@
-package avis.juikit.test;
+package studio.avis.juikit.test;
 
-import avis.juikit.Juikit;
-import avis.juikit.internal.Button;
+import studio.avis.juikit.Juikit;
+import studio.avis.juikit.internal.Button;
 
 import javax.swing.*;
 import java.awt.*;
@@ -29,7 +29,7 @@ public class JuikitMenuButtonTest {
 
             int finalI = i;
 
-            Button.Builder builder = Button.builder()
+            studio.avis.juikit.internal.Button.Builder builder = Button.builder()
                     .id(finalI)
                     .sizeDynamic((jk, size) -> {
                         size.x = x;

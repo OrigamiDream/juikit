@@ -1,8 +1,7 @@
-package avis.juikit.test;
+package studio.avis.juikit.test;
 
-import avis.juikit.Juikit;
-import avis.juikit.internal.Button;
-import avis.juikit.internal.TextField;
+import studio.avis.juikit.Juikit;
+import studio.avis.juikit.internal.TextField;
 
 import javax.swing.*;
 import java.awt.*;
@@ -65,7 +64,7 @@ public class JuikitTextFieldTest {
                                    }))
 
                 // Button for changing bounds
-                .button(Button.builder()
+                .button(studio.avis.juikit.internal.Button.builder()
                                 .sizeFixed(100 - 5 - 20,  150, 10, 10)
                                 .background(Color.RED)
                                 .hover(Color.ORANGE)
@@ -80,7 +79,7 @@ public class JuikitTextFieldTest {
                                 }))
 
                 // Button for changing color
-                .button(Button.builder()
+                .button(studio.avis.juikit.internal.Button.builder()
                                 .sizeFixed(100 - 5,  150, 10, 10)
                                 .background(Color.RED)
                                 .hover(Color.ORANGE)
@@ -92,7 +91,7 @@ public class JuikitTextFieldTest {
                                 }))
 
                 // Button for changing text
-                .button(Button.builder()
+                .button(studio.avis.juikit.internal.Button.builder()
                                 .sizeFixed(100 - 5 + 20,  150, 10, 10)
                                 .background(Color.RED)
                                 .hover(Color.ORANGE)

@@ -1,6 +1,6 @@
-package avis.juikit.test;
+package studio.avis.juikit.test;
 
-import avis.juikit.Juikit;
+import studio.avis.juikit.Juikit;
 
 import javax.swing.*;
 import java.awt.*;

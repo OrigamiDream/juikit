@@ -1,10 +1,12 @@
-package avis.juikit.internal;
+package studio.avis.juikit.internal;
 
-import avis.juikit.Juikit;
+import studio.avis.juikit.Juikit;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.ImageObserver;
+import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
 
 public class TextField {
 
@@ -24,14 +26,14 @@ public class TextField {
     private Size empty = new Size();
     private Size size;
     private Size delegateSize;
-    private Function2d<Juikit, Size, Size> dynamicSize;
+    private BiFunction<Juikit, Size, Size> dynamicSize;
 
     // Backgrounds
     private Image image;
     private Color color;
-    private Consumer2d<Juikit, Graphics> painter;
+    private BiConsumer<Juikit, Graphics> painter;
 
-    private Consumer3d<Juikit, Graphics, JTextField> updater;
+    private TernaryConsumer<Juikit, Graphics, JTextField> updater;
 
     public JTextField getField() {
         return field;
@@ -41,7 +43,7 @@ public class TextField {
         drawInternal(juikit, graphics, observer, image, color, painter);
     }
 
-    private void drawInternal(Juikit juikit, Graphics graphics, ImageObserver observer, Image image, Color color, Consumer2d<Juikit, Graphics> painter) {
+    private void drawInternal(Juikit juikit, Graphics graphics, ImageObserver observer, Image image, Color color, BiConsumer<Juikit, Graphics> painter) {
         Size size = chooseSize(juikit);
         if(image != null) {
             graphics.drawImage(image, size.x, size.y, size.width, size.height, observer);
@@ -95,7 +97,7 @@ public class TextField {
             return this;
         }
 
-        public Builder sizeDynamic(Function2d<Juikit, Size, Size> function) {
+        public Builder sizeDynamic(BiFunction<Juikit, Size, Size> function) {
             field.delegateSize = new Size();
             field.dynamicSize = function;
             return this;
@@ -111,7 +113,7 @@ public class TextField {
             return this;
         }
 
-        public Builder background(Consumer2d<Juikit, Graphics> painter) {
+        public Builder background(BiConsumer<Juikit, Graphics> painter) {
             field.painter = painter;
             return this;
         }
@@ -121,7 +123,7 @@ public class TextField {
             return this;
         }
 
-        public Builder painter(Consumer3d<Juikit, Graphics, JTextField> painter) {
+        public Builder painter(TernaryConsumer<Juikit, Graphics, JTextField> painter) {
             field.updater = painter;
             return this;
         }

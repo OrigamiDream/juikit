@@ -1,9 +1,11 @@
-package avis.juikit.internal;
+package studio.avis.juikit.internal;
 
-import avis.juikit.Juikit;
+import studio.avis.juikit.Juikit;
+
+import java.util.function.BiConsumer;
 
 @FunctionalInterface
-public interface JuikitConsumer<T> extends Consumer2d<Juikit, T> {
+public interface JuikitConsumer<T> extends BiConsumer<Juikit, T> {
 
     static <T> EmptyJuikitConsumer<T> empty() {
         return (juikit, t) -> { };

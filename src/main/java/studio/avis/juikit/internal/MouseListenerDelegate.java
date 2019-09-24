@@ -1,4 +1,4 @@
-package avis.juikit.internal;
+package studio.avis.juikit.internal;
 
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;

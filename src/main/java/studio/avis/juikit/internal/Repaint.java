@@ -1,6 +1,6 @@
-package avis.juikit.internal;
+package studio.avis.juikit.internal;
 
-import avis.juikit.Juikit;
+import studio.avis.juikit.Juikit;
 
 import java.awt.*;
 

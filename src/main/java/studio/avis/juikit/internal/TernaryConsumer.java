@@ -1,8 +1,9 @@
-package avis.juikit.internal;
+package studio.avis.juikit.internal;
 
 import java.util.Map;
+import java.util.function.BiConsumer;
 
-public interface Consumer3d<K, T1, T2> extends Consumer2d<K, Map.Entry<T1, T2>> {
+public interface TernaryConsumer<K, T1, T2> extends BiConsumer<K, Map.Entry<T1, T2>> {
 
     void accept(K k, T1 t1, T2 t2);
 

@@ -1,7 +1,7 @@
-package avis.juikit.test;
+package studio.avis.juikit.test;
 
-import avis.juikit.Juikit;
-import avis.juikit.internal.Button;
+import studio.avis.juikit.Juikit;
+import studio.avis.juikit.internal.Button;
 
 import javax.swing.*;
 import java.awt.*;

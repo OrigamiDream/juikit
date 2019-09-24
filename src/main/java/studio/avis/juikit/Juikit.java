@@ -1,8 +1,8 @@
-package avis.juikit;
+package studio.avis.juikit;
 
-import avis.juikit.internal.*;
-import avis.juikit.internal.Button;
-import avis.juikit.internal.TextField;
+import studio.avis.juikit.internal.*;
+import studio.avis.juikit.internal.Button;
+import studio.avis.juikit.internal.TextField;
 
 import javax.swing.*;
 import java.awt.*;
@@ -18,6 +18,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.BiConsumer;
 
 public class Juikit {
 
@@ -127,7 +128,7 @@ public class Juikit {
         return this;
     }
 
-    public Juikit ifData(Object key, Consumer3d<Juikit, Object, Object> consumer) {
+    public Juikit ifData(Object key, TernaryConsumer<Juikit, Object, Object> consumer) {
         Object value = storage.get(key);
         if(value != null) {
             consumer.accept(this, key, value);
@@ -135,7 +136,7 @@ public class Juikit {
         return this;
     }
 
-    public Juikit ifNoData(Object key, Consumer2d<Juikit, Object> consumer) {
+    public Juikit ifNoData(Object key, BiConsumer<Juikit, Object> consumer) {
         Object value = storage.get(key);
         if(value == null) {
             consumer.accept(this, key);
@@ -156,7 +157,7 @@ public class Juikit {
         return this;
     }
 
-    public Juikit prefer(Consumer2d<Juikit, JFrame> consumer) {
+    public Juikit prefer(BiConsumer<Juikit, JFrame> consumer) {
         consumer.accept(this, frame);
         return this;
     }

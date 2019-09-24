@@ -1,6 +1,6 @@
-package avis.juikit.internal;
+package studio.avis.juikit.internal;
 
-import avis.juikit.Juikit;
+import studio.avis.juikit.Juikit;
 
 import javax.swing.*;
 import java.awt.*;
@@ -14,8 +14,8 @@ public class JuikitPanel extends JPanel {
     private final Juikit juikit;
     private Image backgroundImage;
 
-    private final List<Button> buttons = new CopyOnWriteArrayList<>();
-    private final List<TextField> textFields = new CopyOnWriteArrayList<>();
+    private final List<studio.avis.juikit.internal.Button> buttons = new CopyOnWriteArrayList<>();
+    private final List<studio.avis.juikit.internal.TextField> textFields = new CopyOnWriteArrayList<>();
 
     public JuikitPanel(Juikit juikit) {
         this.juikit = juikit;
@@ -25,14 +25,14 @@ public class JuikitPanel extends JPanel {
         this.backgroundImage = backgroundImage;
     }
 
-    public void addButton(Button.Builder button) {
+    public void addButton(studio.avis.juikit.internal.Button.Builder button) {
         if(buttons.size() == 0) {
             juikit.mouseMoved((jk, mouseEvent) -> {
                 int x = mouseEvent.getX();
                 int y = mouseEvent.getY();
 
                 for(int i = buttons.size() - 1; i >= 0; i--) {
-                    Button btn = buttons.get(i);
+                    studio.avis.juikit.internal.Button btn = buttons.get(i);
                     if(btn.isHoverable() && !btn.pressed) {
                         btn.hovered = btn.checkHover(jk, x, y);
                         if(btn.hovered) {
@@ -43,7 +43,7 @@ public class JuikitPanel extends JPanel {
             });
             juikit.mousePressed((jk, mouseEvent) -> {
                 for(int i = buttons.size() - 1; i >= 0; i--) {
-                    Button btn = buttons.get(i);
+                    studio.avis.juikit.internal.Button btn = buttons.get(i);
                     if(btn.checkHover(jk, mouseEvent.getX(), mouseEvent.getY())) {
                         btn.deferredPressed = true;
                         btn.pressed = true;
@@ -57,7 +57,7 @@ public class JuikitPanel extends JPanel {
             });
             juikit.mouseReleased((jk, mouseEvent) -> {
                 for(int i = buttons.size() - 1; i >= 0; i--) {
-                    Button btn = buttons.get(i);
+                    studio.avis.juikit.internal.Button btn = buttons.get(i);
                     if(btn.pressed) {
                         btn.deferredReleased = true;
                     }
@@ -78,9 +78,9 @@ public class JuikitPanel extends JPanel {
         buttons.clear();
     }
 
-    public void addTextField(TextField.Builder builder) {
+    public void addTextField(studio.avis.juikit.internal.TextField.Builder builder) {
         JTextField field = new JTextField();
-        TextField textField = builder.field;
+        studio.avis.juikit.internal.TextField textField = builder.field;
         if(textField.initText != null) {
             field.setText(textField.initText);
         }
@@ -97,13 +97,13 @@ public class JuikitPanel extends JPanel {
     }
 
     public void removeTextField(Object id) {
-        Predicate<TextField> predicate = textField -> textField.id != null && textField.id.equals(id);
-        textFields.stream().filter(predicate).map(TextField::getField).forEach(this::remove);
+        Predicate<studio.avis.juikit.internal.TextField> predicate = textField -> textField.id != null && textField.id.equals(id);
+        textFields.stream().filter(predicate).map(studio.avis.juikit.internal.TextField::getField).forEach(this::remove);
         textFields.removeIf(predicate);
     }
 
     public void clearTextFields() {
-        textFields.stream().map(TextField::getField).forEach(this::remove);
+        textFields.stream().map(studio.avis.juikit.internal.TextField::getField).forEach(this::remove);
         textFields.clear();
     }
 

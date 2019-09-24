@@ -1,7 +1,7 @@
-package avis.juikit.test;
+package studio.avis.juikit.test;
 
-import avis.juikit.Juikit;
-import avis.juikit.internal.Button;
+import studio.avis.juikit.Juikit;
+import studio.avis.juikit.internal.Button;
 
 import javax.swing.*;
 import java.awt.*;
@@ -79,7 +79,7 @@ public class JuikitOverlayButtonTest {
             int finalI = i;
 
             juikit.data(finalI, 0d);
-            juikit.button(Button.builder()
+            juikit.button(studio.avis.juikit.internal.Button.builder()
                                   .priority(2)
                                   .sizeDynamic((jk, size) -> {
                                       size.x = x;

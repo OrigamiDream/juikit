@@ -1,9 +1,11 @@
-package avis.juikit.internal;
+package studio.avis.juikit.internal;
 
-import avis.juikit.Juikit;
+import studio.avis.juikit.Juikit;
 
 import java.awt.*;
 import java.awt.image.ImageObserver;
+import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
 
 public class Button {
 
@@ -20,29 +22,29 @@ public class Button {
     private Size empty = new Size();
     private Size size;
     private Size delegateSize;
-    private Function2d<Juikit, Size, Size> dynamicSize;
+    private BiFunction<Juikit, Size, Size> dynamicSize;
 
     // Backgrounds
     private Image image;
     private Color color;
-    private Consumer2d<Juikit, Graphics> painter;
+    private BiConsumer<Juikit, Graphics> painter;
 
     // Events
     private Image hoverImage;
     private Color hoverColor;
-    private Consumer2d<Juikit, Graphics> hoverPainter;
+    private BiConsumer<Juikit, Graphics> hoverPainter;
     boolean hovered;
 
     private Image pressImage;
     private Color pressColor;
-    private Consumer2d<Juikit, Graphics> pressPainter;
+    private BiConsumer<Juikit, Graphics> pressPainter;
     boolean pressed;
 
     boolean deferredReleased = false;
     boolean deferredPressed = false;
-    private Consumer2d<Juikit, Graphics> runnableReleased;
-    private Consumer2d<Juikit, Graphics> runnablePressed;
-    private Consumer2d<Juikit, Graphics> runnableWhile;
+    private BiConsumer<Juikit, Graphics> runnableReleased;
+    private BiConsumer<Juikit, Graphics> runnablePressed;
+    private BiConsumer<Juikit, Graphics> runnableWhile;
 
     boolean highPriorityOnly = true;
 
@@ -80,7 +82,7 @@ public class Button {
         }
     }
 
-    private void drawInternal(Juikit juikit, Graphics graphics, ImageObserver observer, Image image, Color color, Consumer2d<Juikit, Graphics> painter) {
+    private void drawInternal(Juikit juikit, Graphics graphics, ImageObserver observer, Image image, Color color, BiConsumer<Juikit, Graphics> painter) {
         Size size = chooseSize(juikit);
         if(image != null) {
             graphics.drawImage(image, size.x, size.y, size.width, size.height, observer);
@@ -135,7 +137,7 @@ public class Button {
             return this;
         }
 
-        public Builder sizeDynamic(Function2d<Juikit, Size, Size> function) {
+        public Builder sizeDynamic(BiFunction<Juikit, Size, Size> function) {
             button.delegateSize = new Size();
             button.dynamicSize = function;
             return this;
@@ -151,7 +153,7 @@ public class Button {
             return this;
         }
 
-        public Builder background(Consumer2d<Juikit, Graphics> painter) {
+        public Builder background(BiConsumer<Juikit, Graphics> painter) {
             button.painter = painter;
             return this;
         }
@@ -166,7 +168,7 @@ public class Button {
             return this;
         }
 
-        public Builder hover(Consumer2d<Juikit, Graphics> hoverPainter) {
+        public Builder hover(BiConsumer<Juikit, Graphics> hoverPainter) {
             button.hoverPainter = hoverPainter;
             return this;
         }
@@ -181,22 +183,22 @@ public class Button {
             return this;
         }
 
-        public Builder press(Consumer2d<Juikit, Graphics> pressPainter) {
+        public Builder press(BiConsumer<Juikit, Graphics> pressPainter) {
             button.pressPainter = pressPainter;
             return this;
         }
 
-        public Builder processPressed(Consumer2d<Juikit, Graphics> runnable) {
+        public Builder processPressed(BiConsumer<Juikit, Graphics> runnable) {
             button.runnablePressed = runnable;
             return this;
         }
 
-        public Builder processReleased(Consumer2d<Juikit, Graphics> runnable) {
+        public Builder processReleased(BiConsumer<Juikit, Graphics> runnable) {
             button.runnableReleased = runnable;
             return this;
         }
 
-        public Builder processWhile(Consumer2d<Juikit, Graphics> runnable) {
+        public Builder processWhile(BiConsumer<Juikit, Graphics> runnable) {
             button.runnableWhile = runnable;
             return this;
         }
