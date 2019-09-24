@@ -9,6 +9,13 @@
     <version>2.0</version>
     <packaging>jar</packaging>
 
+    <distributionManagement>
+        <repository>
+            <id>github</id>
+            <url>https://maven.pkg.github.com/OrigamiDream/juikit</url>
+        </repository>
+    </distributionManagement>
+
     <build>
         <plugins>
             <plugin>
