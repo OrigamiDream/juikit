@@ -11,7 +11,7 @@ Simple!
 ```xml
 <repositories>
     <repository>
-        <id>ipdetection4j</id>
+        <id>juikit</id>
         <url>https://maven.pkg.github.com/OrigamiDream</url>
     </repository>
 </repositories>
