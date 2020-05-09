@@ -19,7 +19,7 @@ Simple!
     <dependency>
         <groupId>studio.avis</groupId>
         <artifactId>juikit</artifactId>
-        <version>2.0</version>
+        <version>3.0</version>
     </dependency>
 </dependencies>
 ```
@@ -33,7 +33,7 @@ allprojects {
 }
 
 dependencies {
-    implementation 'studio.avis:juikit:v2.10.0'
+    implementation 'studio.avis:juikit:3.0'
 }
 ```
 

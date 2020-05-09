@@ -38,7 +38,7 @@ public class JuikitIntroTest {
                     graphics.fillRect(250, 250, 500, 500);
                     if(!juikit.data(DONE, Boolean.class)) {
                         long time = juikit.data(LOADING_TIMEOUT);
-                        displayLoading(juikit, graphics, juikit.data(CHANGE, Boolean.class) && System.currentTimeMillis() - time < 3000L, () -> {
+                        displayLoading(juikit.juikit(), graphics, juikit.data(CHANGE, Boolean.class) && System.currentTimeMillis() - time < 3000L, () -> {
                             juikit.data(CHANGE, false);
                         });
                     }

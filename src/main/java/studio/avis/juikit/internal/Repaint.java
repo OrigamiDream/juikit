@@ -7,6 +7,6 @@ import java.awt.*;
 @FunctionalInterface
 public interface Repaint {
 
-    void repaint(Juikit juikit, Graphics graphics);
+    void repaint(JuikitView juikit, Graphics graphics);
 
 }

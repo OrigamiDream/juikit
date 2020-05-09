@@ -19,35 +19,23 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.BiConsumer;
+import java.util.function.Function;
 
 public class Juikit {
 
     private static final String OPERATING_SYSTEM = System.getProperty("os.name").toLowerCase();
 
     private final JFrame frame;
-    private final JuikitPanel panel;
-    private final JuikitListener listener;
-    private final List<JTextField> textFields = new ArrayList<>();
-
-    private AtomicReference<Repaint> beforePainter = new AtomicReference<>(null);
-    private AtomicReference<Repaint> repaint = new AtomicReference<>(null);
-    private AtomicReference<Repaint> afterPainter = new AtomicReference<>(null);
-
-    private AtomicBoolean REPAINT = new AtomicBoolean(false);
-    private AtomicLong REPAINT_INTEVAL = new AtomicLong();
+    private final JuikitView legacyView;
 
     private Map<Object, Object> storage = new ConcurrentHashMap<>();
-
-    private AtomicBoolean antialiasing = new AtomicBoolean(false);
     
     private boolean size = false;
 
     private Juikit(JFrame frame) {
         this.frame = frame;
-        this.panel = new JuikitPanel(this);
-        this.frame.setContentPane(panel);
-        this.listener = new JuikitListener(this);
-        this.panel.setLayout(null);
+        this.legacyView = new JuikitView(this);
+        this.frame.setContentPane(legacyView.panel());
     }
 
     public boolean macOS() {
@@ -87,6 +75,20 @@ public class Juikit {
         } catch (Exception ignored) {
         }
         return this;
+    }
+
+    public Juikit layout(Function<Juikit, LayoutManager> function) {
+        panel().setLayout(function.apply(this));
+        return this;
+    }
+
+    public Juikit layout(LayoutManager layout) {
+        panel().setLayout(layout);
+        return this;
+    }
+
+    public LayoutManager layout() {
+        return panel().getLayout();
     }
 
     public Juikit dockIcon(String path) {
@@ -193,16 +195,31 @@ public class Juikit {
         return frame;
     }
 
+    public Juikit defaultPainter(boolean defaultPainter) {
+        legacyView.defaultPainter(defaultPainter);
+        return this;
+    }
+
+    public Juikit newPanel(BiConsumer<Juikit, JuikitView> consumer) {
+        JuikitView view = new JuikitView(this);
+        consumer.accept(this, view);
+        legacyView.panel().add(view.panel());
+        return this;
+    }
+
+    @Deprecated
     public JuikitPanel panel() {
-        return panel;
+        return legacyView.panel();
     }
 
+    @Deprecated
     public boolean antialiasing() {
-        return antialiasing.get();
+        return legacyView.antialiasing();
     }
 
+    @Deprecated
     public Juikit antialiasing(boolean antialiasing) {
-        this.antialiasing.set(antialiasing);
+        legacyView.antialiasing(antialiasing);
         return this;
     }
 
@@ -225,183 +242,206 @@ public class Juikit {
         return frame.getSize().height;
     }
 
-    public Repaint beforePainter() {
-        return beforePainter.get();
-    }
-
-    public Juikit beforePainter(Repaint repaint) {
-        this.beforePainter.set(repaint);
-        return this;
-    }
-
-    public Repaint afterPainter() {
-        return afterPainter.get();
-    }
-
-    public Juikit afterPainter(Repaint repaint) {
-        this.afterPainter.set(repaint);
-        return this;
-    }
-
-    public Repaint painter() {
-        return repaint.get();
-    }
-
-    public Juikit painter(Repaint repaint) {
-        this.repaint.set(repaint);
-        return this;
-    }
-
-    public Juikit repaint() {
-        panel.repaint();
-        return this;
-    }
-
-    public Juikit repaintInterval(long milliseconds) {
-        REPAINT.set(true);
-        REPAINT_INTEVAL.set(milliseconds);
-        new Thread(() -> {
-            while(REPAINT.get()) {
-                try {
-                    Thread.sleep(REPAINT_INTEVAL.get());
-                } catch(InterruptedException e) {
-                    e.printStackTrace();
-                }
-                repaint();
-            }
-        }).start();
-        return this;
-    }
-
-    public Juikit stopRepainting() {
-        REPAINT.set(false);
-        REPAINT_INTEVAL.set(0);
-        return this;
-    }
-
     public Juikit closeOperation(int operation) {
         frame.setDefaultCloseOperation(operation);
         return this;
     }
 
+    @Deprecated
+    public Repaint beforePainter() {
+        return legacyView.beforePainter();
+    }
+
+    @Deprecated
+    public Juikit beforePainter(Repaint repaint) {
+        legacyView.beforePainter(repaint);
+        return this;
+    }
+
+    @Deprecated
+    public Repaint afterPainter() {
+        return legacyView.afterPainter();
+    }
+
+    @Deprecated
+    public Juikit afterPainter(Repaint repaint) {
+        legacyView.afterPainter(repaint);
+        return this;
+    }
+
+    @Deprecated
+    public Repaint painter() {
+        return legacyView.painter();
+    }
+
+    @Deprecated
+    public Juikit painter(Repaint repaint) {
+        legacyView.painter(repaint);
+        return this;
+    }
+
+    public Juikit repaint() {
+        legacyView.repaint();
+        return this;
+    }
+
+    @Deprecated
+    public Juikit repaintInterval(long milliseconds) {
+        legacyView.repaintInterval(milliseconds);
+        return this;
+    }
+
+    @Deprecated
+    public Juikit stopRepainting() {
+        legacyView.stopRepainting();
+        return this;
+    }
+
+    @Deprecated
     public boolean isVisible() {
-        return frame.isVisible() && panel.isVisible();
+        return frame.isVisible() && legacyView.isVisible();
     }
 
     public Juikit visibility(boolean visible) {
         frame.setVisible(visible);
-        panel.setVisible(visible);
+        legacyView.visibility(visible);
         return this;
     }
 
+    public Juikit pack() {
+        frame.pack();
+        return this;
+    }
+
+    @Deprecated
     public Juikit background(Color color) {
-        panel.setBackground(color);
+        legacyView.background(color);
         return this;
     }
 
+    @Deprecated
     public Juikit background(Image image) {
-        panel.setBackgroundImage(image);
+        legacyView.background(image);
         return this;
     }
 
+    @Deprecated
     public Juikit keyListener(KeyListener keyListener) {
-        frame.addKeyListener(keyListener);
+        legacyView.keyListener(keyListener);
         return this;
     }
 
+    @Deprecated
     public Juikit mouseListener(MouseListenerDelegate mouseListener) {
-        panel.addMouseListener(mouseListener);
-        panel.addMouseMotionListener(mouseListener);
-        panel.addMouseWheelListener(mouseListener);
+        legacyView.mouseListener(mouseListener);
         return this;
     }
 
+    @Deprecated
     public Juikit textField(String initText, int x, int y, int width, int height) {
-        JTextField field = new JTextField();
-        if(initText != null) {
-            field.setText(initText);
-        }
-        field.setBounds(x, y, width, height);
-        field.setSize(width, height);
-        field.setVisible(true);
-
-        textFields.add(field);
-        panel().add(field);
-
+        legacyView.textField(initText, x, y, width, height);
         return this;
     }
 
+    @Deprecated
     public Juikit textField(TextField.Builder builder) {
-        panel.addTextField(builder);
+        legacyView.textField(builder);
         return this;
     }
 
+    @Deprecated
     public Juikit removeTextField(Object id) {
-        panel.removeTextField(id);
+        legacyView.removeTextField(id);
         return this;
     }
 
+    @Deprecated
     public Juikit clearTextField() {
-        panel.clearTextFields();
+        legacyView.clearTextField();
         return this;
     }
 
+    @Deprecated
     public Juikit button(Button.Builder builder) {
-        panel.addButton(builder);
+        legacyView.button(builder);
         return this;
     }
 
+    @Deprecated
     public Juikit removeButton(Object id) {
-        panel.removeButton(id);
+        legacyView.removeButton(id);
         return this;
     }
 
+    @Deprecated
     public Juikit clearButtons() {
-        panel.clearButtons();
+        legacyView.clearButtons();
         return this;
     }
 
+    @Deprecated
     public Juikit mouseClicked(JuikitConsumer<MouseEvent> mouseClicked) {
-        return listener.mouseClicked(mouseClicked);
+        legacyView.mouseClicked(mouseClicked);
+        return this;
     }
 
+    @Deprecated
     public Juikit mousePressed(JuikitConsumer<MouseEvent> mousePressed) {
-        return listener.mousePressed(mousePressed);
+        legacyView.mousePressed(mousePressed);
+        return this;
     }
 
+    @Deprecated
     public Juikit mouseReleased(JuikitConsumer<MouseEvent> mouseReleased) {
-        return listener.mouseReleased(mouseReleased);
+        legacyView.mouseReleased(mouseReleased);
+        return this;
     }
 
+    @Deprecated
     public Juikit mouseEntered(JuikitConsumer<MouseEvent> mouseEntered) {
-        return listener.mouseEntered(mouseEntered);
+        legacyView.mouseEntered(mouseEntered);
+        return this;
     }
 
+    @Deprecated
     public Juikit mouseExited(JuikitConsumer<MouseEvent> mouseExited) {
-        return listener.mouseExited(mouseExited);
+        legacyView.mouseExited(mouseExited);
+        return this;
     }
 
+    @Deprecated
     public Juikit mouseDragged(JuikitConsumer<MouseEvent> mouseDragged) {
-        return listener.mouseDragged(mouseDragged);
+        legacyView.mouseDragged(mouseDragged);
+        return this;
     }
 
+    @Deprecated
     public Juikit mouseMoved(JuikitConsumer<MouseEvent> mouseMoved) {
-        return listener.mouseMoved(mouseMoved);
+        legacyView.mouseMoved(mouseMoved);
+        return this;
     }
 
+    @Deprecated
     public Juikit mouseWheelMoved(JuikitConsumer<MouseEvent> mouseWheelMoved) {
-        return listener.mouseWheelMoved(mouseWheelMoved);
+        legacyView.mouseWheelMoved(mouseWheelMoved);
+        return this;
     }
 
+    @Deprecated
     public Juikit keyTyped(JuikitConsumer<KeyEvent> keyTyped) {
-        return listener.keyTyped(keyTyped);
+        legacyView.keyTyped(keyTyped);
+        return this;
     }
 
+    @Deprecated
     public Juikit keyPressed(JuikitConsumer<KeyEvent> keyPressed) {
-        return listener.keyPressed(keyPressed);
+        legacyView.keyPressed(keyPressed);
+        return this;
     }
 
+    @Deprecated
     public Juikit keyReleased(JuikitConsumer<KeyEvent> keyReleased) {
-        return listener.keyReleased(keyReleased);
+        legacyView.keyReleased(keyReleased);
+        return this;
     }
 }

@@ -1,24 +1,33 @@
 package studio.avis.juikit.internal;
 
-import studio.avis.juikit.Juikit;
-
 import javax.swing.*;
 import java.awt.*;
 import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Predicate;
 
 public class JuikitPanel extends JPanel {
 
-    private final Juikit juikit;
+    private final JuikitView view;
     private Image backgroundImage;
 
     private final List<studio.avis.juikit.internal.Button> buttons = new CopyOnWriteArrayList<>();
     private final List<studio.avis.juikit.internal.TextField> textFields = new CopyOnWriteArrayList<>();
 
-    public JuikitPanel(Juikit juikit) {
-        this.juikit = juikit;
+    private AtomicBoolean defaultPainter = new AtomicBoolean(false);
+
+    public JuikitPanel(JuikitView view) {
+        this.view = view;
+    }
+
+    public AtomicBoolean defaultPainter() {
+        return defaultPainter;
+    }
+
+    public void setDefaultPainter(boolean defaultPainter) {
+        this.defaultPainter.set(defaultPainter);
     }
 
     public void setBackgroundImage(Image backgroundImage) {
@@ -27,7 +36,7 @@ public class JuikitPanel extends JPanel {
 
     public void addButton(studio.avis.juikit.internal.Button.Builder button) {
         if(buttons.size() == 0) {
-            juikit.mouseMoved((jk, mouseEvent) -> {
+            view.mouseMoved((jk, mouseEvent) -> {
                 int x = mouseEvent.getX();
                 int y = mouseEvent.getY();
 
@@ -41,7 +50,7 @@ public class JuikitPanel extends JPanel {
                     }
                 }
             });
-            juikit.mousePressed((jk, mouseEvent) -> {
+            view.mousePressed((jk, mouseEvent) -> {
                 for(int i = buttons.size() - 1; i >= 0; i--) {
                     studio.avis.juikit.internal.Button btn = buttons.get(i);
                     if(btn.checkHover(jk, mouseEvent.getX(), mouseEvent.getY())) {
@@ -55,7 +64,7 @@ public class JuikitPanel extends JPanel {
                     }
                 }
             });
-            juikit.mouseReleased((jk, mouseEvent) -> {
+            view.mouseReleased((jk, mouseEvent) -> {
                 for(int i = buttons.size() - 1; i >= 0; i--) {
                     studio.avis.juikit.internal.Button btn = buttons.get(i);
                     if(btn.pressed) {
@@ -84,7 +93,7 @@ public class JuikitPanel extends JPanel {
         if(textField.initText != null) {
             field.setText(textField.initText);
         }
-        Size size = textField.chooseSize(juikit);
+        Size size = textField.chooseSize(view);
         field.setBounds(size.x, size.y, size.width, size.height);
         field.setSize(size.width, size.height);
         field.setVisible(true);
@@ -109,50 +118,54 @@ public class JuikitPanel extends JPanel {
 
     @Override
     protected void paintComponent(Graphics g) {
-        if(backgroundImage != null) {
-            g.drawImage(backgroundImage, 0, 0, this);
-        }
+        if(defaultPainter.get()) {
+            super.paintComponent(g);
+        } else {
+            if(backgroundImage != null) {
+                g.drawImage(backgroundImage, 0, 0, this);
+            }
 
-        if(juikit.beforePainter() != null) {
-            juikit.beforePainter().repaint(juikit, g);
-        }
+            if(view.beforePainter() != null) {
+                view.beforePainter().repaint(view, g);
+            }
 
-        if(juikit.antialiasing()) {
-            RenderingHints hints = new RenderingHints(RenderingHints.KEY_ANTIALIASING,
-                                                      RenderingHints.VALUE_ANTIALIAS_ON);
+            if(view.antialiasing()) {
+                RenderingHints hints = new RenderingHints(RenderingHints.KEY_ANTIALIASING,
+                        RenderingHints.VALUE_ANTIALIAS_ON);
 
-            ((Graphics2D) g).setRenderingHints(hints);
-        }
+                ((Graphics2D) g).setRenderingHints(hints);
+            }
 
-        if(juikit.painter() != null) {
-            juikit.painter().repaint(juikit, g);
-        }
+            if(view.painter() != null) {
+                view.painter().repaint(view, g);
+            }
 
-        for(Button button : buttons) {
-            if(button.pressed) {
-                if(button.deferredPressed) {
-                    button.deferredPressed = false;
-                    button.activateBefore(juikit, g);
+            for(Button button : buttons) {
+                if(button.pressed) {
+                    if(button.deferredPressed) {
+                        button.deferredPressed = false;
+                        button.activateBefore(view, g);
+                    }
+                    button.renderPress(view, g, this);
+                    button.activateWhile(view, g);
+                } else if(button.hovered) {
+                    button.renderHover(view, g, this);
+                } else {
+                    button.renderDefault(view, g, this);
                 }
-                button.renderPress(juikit, g, this);
-                button.activateWhile(juikit, g);
-            } else if(button.hovered) {
-                button.renderHover(juikit, g, this);
-            } else {
-                button.renderDefault(juikit, g, this);
+                if(button.deferredReleased) {
+                    button.deferredReleased = false;
+                    button.activateAfter(view, g);
+                }
             }
-            if(button.deferredReleased) {
-                button.deferredReleased = false;
-                button.activateAfter(juikit, g);
+
+            for(TextField textField : textFields) {
+                textField.renderDefault(view, g, this);
             }
-        }
 
-        for(TextField textField : textFields) {
-            textField.renderDefault(juikit, g, this);
-        }
-
-        if(juikit.afterPainter() != null) {
-            juikit.afterPainter().repaint(juikit, g);
+            if(view.afterPainter() != null) {
+                view.afterPainter().repaint(view, g);
+            }
         }
     }
 }

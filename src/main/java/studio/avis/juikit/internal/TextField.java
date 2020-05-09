@@ -1,7 +1,5 @@
 package studio.avis.juikit.internal;
 
-import studio.avis.juikit.Juikit;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.ImageObserver;
@@ -26,25 +24,25 @@ public class TextField {
     private Size empty = new Size();
     private Size size;
     private Size delegateSize;
-    private BiFunction<Juikit, Size, Size> dynamicSize;
+    private BiFunction<JuikitView, Size, Size> dynamicSize;
 
     // Backgrounds
     private Image image;
     private Color color;
-    private BiConsumer<Juikit, Graphics> painter;
+    private BiConsumer<JuikitView, Graphics> painter;
 
-    private TernaryConsumer<Juikit, Graphics, JTextField> updater;
+    private TernaryConsumer<JuikitView, Graphics, JTextField> updater;
 
     public JTextField getField() {
         return field;
     }
 
-    public void renderDefault(Juikit juikit, Graphics graphics, ImageObserver observer) {
-        drawInternal(juikit, graphics, observer, image, color, painter);
+    public void renderDefault(JuikitView view, Graphics graphics, ImageObserver observer) {
+        drawInternal(view, graphics, observer, image, color, painter);
     }
 
-    private void drawInternal(Juikit juikit, Graphics graphics, ImageObserver observer, Image image, Color color, BiConsumer<Juikit, Graphics> painter) {
-        Size size = chooseSize(juikit);
+    private void drawInternal(JuikitView view, Graphics graphics, ImageObserver observer, Image image, Color color, BiConsumer<JuikitView, Graphics> painter) {
+        Size size = chooseSize(view);
         if(image != null) {
             graphics.drawImage(image, size.x, size.y, size.width, size.height, observer);
         } else if(color != null) {
@@ -53,7 +51,7 @@ public class TextField {
             graphics.fillRect(size.x, size.y, size.width, size.height);
             graphics.setColor(original);
         } else if(painter != null) {
-            painter.accept(juikit, graphics);
+            painter.accept(view, graphics);
         }
         if(!size.equals(prev)) {
             field.setBounds(size.x, size.y, size.width, size.height);
@@ -61,15 +59,15 @@ public class TextField {
             prev = size.copy();
         }
         if(updater != null) {
-            updater.accept(juikit, graphics, field);
+            updater.accept(view, graphics, field);
         }
     }
 
-    public Size chooseSize(Juikit juikit) {
+    public Size chooseSize(JuikitView view) {
         if(size != null) {
             return size;
         } else if(delegateSize != null) {
-            delegateSize = dynamicSize.apply(juikit, delegateSize);
+            delegateSize = dynamicSize.apply(view, delegateSize);
             return delegateSize;
         }
         return empty;
@@ -97,7 +95,7 @@ public class TextField {
             return this;
         }
 
-        public Builder sizeDynamic(BiFunction<Juikit, Size, Size> function) {
+        public Builder sizeDynamic(BiFunction<JuikitView, Size, Size> function) {
             field.delegateSize = new Size();
             field.dynamicSize = function;
             return this;
@@ -113,7 +111,7 @@ public class TextField {
             return this;
         }
 
-        public Builder background(BiConsumer<Juikit, Graphics> painter) {
+        public Builder background(BiConsumer<JuikitView, Graphics> painter) {
             field.painter = painter;
             return this;
         }
@@ -123,7 +121,7 @@ public class TextField {
             return this;
         }
 
-        public Builder painter(TernaryConsumer<Juikit, Graphics, JTextField> painter) {
+        public Builder painter(TernaryConsumer<JuikitView, Graphics, JTextField> painter) {
             field.updater = painter;
             return this;
         }
